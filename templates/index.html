@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Center Cooling Optimization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center mb-6">AI-Powered Data Center Cooling</h1>
+        <p class="text-center mb-4">This app uses a Deep Q-Network (DQN) to optimize cooling for a data center, minimizing <strong>energy cost</strong>, <strong>water consumption</strong>, and maintaining safe <strong>temperatures</strong>. Enter parameters to retrain and evaluate the model.</p>
+        
+        <div class="bg-white p-4 rounded shadow mb-6">
+            <h2 class="text-xl font-semibold mb-2">Configure Data Center</h2>
+            <form method="POST" action="/">
+                <div class="mb-4">
+                    <label for="num_servers" class="block text-sm font-medium text-gray-700">Number of GPUs</label>
+                    <input type="number" id="num_servers" name="num_servers" value="10" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="gpu_type" class="block text-sm font-medium text-gray-700">GPU Type</label>
+                    <select id="gpu_type" name="gpu_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="H100">NVIDIA H100 (700W)</option>
+                        <option value="A100">NVIDIA A100 (400W)</option>
+                        <option value="V100">NVIDIA V100 (300W)</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Train & Evaluate</button>
+                </div>
+            </form>
+        </div>
+        
+        {% if results %}
+            {% if results.error %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                    {{ results.error }}
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white p-4 rounded shadow">
+                        <h2 class="text-xl font-semibold mb-2">Optimization Results</h2>
+                        <p><strong>Configuration:</strong> {{ results.num_servers }} {{ results.gpu_type }} GPUs</p>
+                        <p><strong>Total Reward (Energy & Water Efficiency):</strong> {{ results.reward }}</p>
+                        <p><strong>Total Water Consumption:</strong> {{ results.water }} liters</p>
+                        <p><strong>Cooling Actions (Energy & Water Impact):</strong></p>
+                        <ul class="list-disc pl-5">
+                            <li>Air Cooling (High Energy, Low Water): {{ results.actions['Air (High Energy, Low Water)'] }} times</li>
+                            <li>Liquid Cooling (Medium Energy, High Water): {{ results.actions['Liquid (Medium Energy, High Water)'] }} times</li>
+                            <li>Immersion Cooling (Low Energy, Low Water): {{ results.actions['Immersion (Low Energy, Low Water)'] }} times</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <h2 class="text-xl font-semibold mb-2">Temperature Control (Heat Management)</h2>
+                        <img src="{{ results.temp_plot }}?{{ results.cache_buster }}" alt="Temperature Plot" class="w-full">
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <h2 class="text-xl font-semibold mb-2">Water Usage Optimization</h2>
+                        <img src="{{ results.water_plot }}?{{ results.cache_buster }}" alt="Water Usage Plot" class="w-full">
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
