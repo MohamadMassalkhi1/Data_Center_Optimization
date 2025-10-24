@@ -19,5 +19,19 @@ python app.py
 ```
 Then open http://127.0.0.1:5000 in your browser.
 
+## Docker Deployment
+
+### Build the Docker image:
+```bash
+docker build -t data-center-cooling .
+```
+
+### Run the container:
+```bash
+docker run -p 5000:5000 data-center-cooling
+```
+
+Then open http://localhost:5000 in your browser.
+
 ## Note
 This is one of my first reinforcement learning projects, created for learning purposes.
