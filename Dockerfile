@@ -16,12 +16,13 @@ COPY . .
 # Create static folder for plots
 RUN mkdir -p static
 
-# Expose Flask port
-EXPOSE 5000
+# Expose Flask port (changed to 8080)
+EXPOSE 8080
 
 # Set environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
+ENV PORT=8080
 
 # Run the application
 CMD ["python", "app.py"]
